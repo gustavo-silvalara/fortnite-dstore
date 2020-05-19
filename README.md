@@ -2,7 +2,7 @@
 
 A new Flutter project.
 
-<img src="app.JPEG " alt="app" style="width:200px;"/>
+<img src="app.JPEG " alt="app" style="max-width:200px;"/>
 
 ## Getting Started
 
