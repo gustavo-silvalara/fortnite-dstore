@@ -3,7 +3,6 @@ import 'package:countdown_flutter/countdown_flutter.dart';
 import 'dart:async';
 import 'package:flutter_device_locale/flutter_device_locale.dart';
 import 'package:dio/dio.dart';
-import 'package:fortnite_dstore/ItemLoja.dart';
 
 void main() {
   runApp(MyApp());
@@ -55,22 +54,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  // int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  // void _incrementCounter() {
+  //   setState(() {
+  //     // This call to setState tells the Flutter framework that something has
+  //     // changed in this State, which causes it to rerun the build method below
+  //     // so that the display can reflect the updated values. If we changed
+  //     // _counter without calling setState(), then the build method would not be
+  //     // called again, and so nothing would appear to happen.
+  //     _counter++;
+  //   });
+  // }
 
-  getDailyStore() async {}
-
-  Future<List> getFutureDados() async {
+  Future<Widget> getFutureDados() async {
     Locale locale = await DeviceLocale.getCurrentLocale();
 
     Uri url = Uri.parse('https://fortniteapi.io/shop?lang=' +
@@ -83,10 +80,19 @@ class _MyHomePageState extends State<MyHomePage> {
     List<ItemLoja> itensLoja = List<ItemLoja>();
     for (Map<String, dynamic> item in response.data['featured']) {
       itensLoja.add(ItemLoja.fromJson(item));
-      print(ItemLoja.fromJson(item).toString());
-      print("\n");
     }
-    return itensLoja;
+
+    List<Widget> listImages = new List<Widget>();
+
+    itensLoja.forEach((element) {
+      listImages.add(
+        Image.network(element.fullBackground),
+      );
+    });
+    return GridView.count(
+      crossAxisCount: 2,
+      children: listImages,
+    );
   }
 
   @override
@@ -133,12 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
             future: getFutureDados(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return GridView.count(
-                  crossAxisCount: 2,
-                  children: List.generate(10, (index) {
-                    return Center(child: Text(snapshot.data.toString()));
-                  }),
-                );
+                return snapshot.data;
               } else {
                 return Center(
                   child: CircularProgressIndicator(),
@@ -173,4 +174,19 @@ class Contador extends StatelessWidget {
       ),
     );
   }
+}
+
+class ItemLoja {
+  final String id;
+  final String name;
+  final String description;
+  final String fullBackground;
+
+  ItemLoja({this.id, this.name, this.description, this.fullBackground});
+
+  ItemLoja.fromJson(Map<String, dynamic> jsonData)
+      : id = jsonData['id'],
+        name = jsonData['name'],
+        description = jsonData['description'],
+        fullBackground = jsonData['full_background'];
 }
