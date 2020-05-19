@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:countdown_flutter/countdown_flutter.dart';
 import 'dart:async';
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -97,8 +99,12 @@ class _MyHomePageState extends State<MyHomePage> {
     List<Widget> listImages = new List<Widget>();
 
     itensLoja.forEach((element) {
+      final cachedImage = new CachedNetworkImage(
+        placeholder: (context, url) => new CircularProgressIndicator(),
+        imageUrl: element.fullBackground,
+      );
       listImages.add(
-        Image.network(element.fullBackground),
+        cachedImage,
       );
     });
 
