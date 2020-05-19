@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:countdown_flutter/countdown_flutter.dart';
 
 void main() {
   runApp(MyApp());
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: '00:00:00'),
+      home: MyHomePage(title: Contador()),
     );
   }
 }
@@ -43,7 +44,7 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
+  final Widget title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -76,7 +77,18 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         elevation: 0.0,
-        title: Text(widget.title),
+        centerTitle: true,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Image.asset(
+              'assets/delivery-box.png',
+              fit: BoxFit.contain,
+              height: 32,
+            ),
+            Container(padding: const EdgeInsets.all(8.0), child: Contador())
+          ],
+        ),
         backgroundColor: Color(0xFF1E8AF4),
       ),
       body: Container(
@@ -126,6 +138,31 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class Contador extends StatelessWidget {
+  var horas = new DateTime.now().toUtc().hour;
+  var minutos = new DateTime.now().toUtc().minute;
+  var segundos = new DateTime.now().toUtc().second;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: CountdownFormatted(
+        duration: Duration(
+          hours: 23 - horas,
+          minutes: 59 - minutos,
+          seconds: 60 - segundos,
+        ),
+        onFinish: () {
+          print('finished!');
+        },
+        builder: (BuildContext ctx, String remaining) {
+          return Text(remaining); // 01:00:00
+        },
+      ),
     );
   }
 }
