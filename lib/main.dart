@@ -81,6 +81,18 @@ class _MyHomePageState extends State<MyHomePage> {
     for (Map<String, dynamic> item in response.data['featured']) {
       itensLoja.add(ItemLoja.fromJson(item));
     }
+    for (Map<String, dynamic> item in response.data['daily']) {
+      itensLoja.add(ItemLoja.fromJson(item));
+    }
+    for (Map<String, dynamic> item in response.data['specialFeatured']) {
+      itensLoja.add(ItemLoja.fromJson(item));
+    }
+    for (Map<String, dynamic> item in response.data['specialDaily']) {
+      itensLoja.add(ItemLoja.fromJson(item));
+    }
+    for (Map<String, dynamic> item in response.data['community']) {
+      itensLoja.add(ItemLoja.fromJson(item));
+    }
 
     List<Widget> listImages = new List<Widget>();
 
@@ -89,8 +101,11 @@ class _MyHomePageState extends State<MyHomePage> {
         Image.network(element.fullBackground),
       );
     });
+
     return GridView.count(
       crossAxisCount: 2,
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
       children: listImages,
     );
   }
