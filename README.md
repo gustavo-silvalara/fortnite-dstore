@@ -2,7 +2,7 @@
 
 A new Flutter project.
 
-![App](app.JPEG =200x)
+<img src="app.JPEG " alt="app" style="width:200px;"/>
 
 ## Getting Started
 
