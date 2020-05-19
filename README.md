@@ -2,7 +2,7 @@
 
 A new Flutter project.
 
-![App](app.JPEG=250x)
+![App](app.JPEG)
 
 ## Getting Started
 
