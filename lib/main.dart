@@ -4,6 +4,9 @@ import 'package:countdown_flutter/countdown_flutter.dart';
 import 'dart:async';
 import 'package:flutter_device_locale/flutter_device_locale.dart';
 import 'package:dio/dio.dart';
+import 'package:device_apps/device_apps.dart';
+import 'package:open_appstore/open_appstore.dart';
+import 'dart:io' show Platform;
 
 void main() {
   runApp(MyApp());
@@ -14,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Fortnite Daily Store',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // This is the theme of your application.
@@ -69,6 +72,18 @@ class _MyHomePageState extends State<MyHomePage> {
   //   });
   // }
 
+  _openFortnite() async {
+    if (Platform.isAndroid) {
+      bool isInstalled =
+          await DeviceApps.isAppInstalled('com.epicgames.fortnite');
+      if (isInstalled != false) {
+        DeviceApps.openApp('com.epicgames.fortnite');
+      } else {
+        OpenAppstore.launch(androidAppId: 'com.epicgames.fortnite');
+      }
+    }
+  }
+
   Future<void> _getFutureDados() async {
     Locale locale = await DeviceLocale.getCurrentLocale();
 
@@ -107,6 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
         cachedImage,
       );
     });
+
     setState(() {
       list = listImages;
     });
@@ -151,15 +167,32 @@ class _MyHomePageState extends State<MyHomePage> {
             SliverAppBar(
               // Provide a standard title.
               title: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.asset(
-                    'assets/delivery-box.png',
-                    fit: BoxFit.contain,
-                    height: 32,
-                  ),
                   Container(
-                      padding: const EdgeInsets.all(8.0), child: Contador())
+                    child: Row(
+                      children: <Widget>[
+                        Tooltip(
+                          message: "Próxima atualização de loja",
+                          child: Image.asset(
+                            'assets/delivery-box.png',
+                            fit: BoxFit.contain,
+                            height: 32,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Contador(
+                            onFinishAction: _getFutureDados,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: _openFortnite,
+                    icon: Icon(Icons.subdirectory_arrow_right),
+                  ),
                 ],
               ),
               // Allows the user to reveal the app bar if they begin scrolling
@@ -197,6 +230,10 @@ class Contador extends StatelessWidget {
   final minutos = new DateTime.now().toUtc().minute;
   final segundos = new DateTime.now().toUtc().second;
 
+  final onFinishAction;
+
+  Contador({this.onFinishAction});
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -207,7 +244,7 @@ class Contador extends StatelessWidget {
           seconds: 60 - segundos,
         ),
         onFinish: () {
-          print('finished!');
+          onFinishAction();
         },
         builder: (BuildContext ctx, String remaining) {
           return Text(remaining); // 01:00:00

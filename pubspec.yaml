@@ -31,6 +31,8 @@ dependencies:
   flutter_device_locale: ^0.3.1
   dio: ^3.0.3
   cached_network_image: ^2.2.0+1
+  device_apps: ^1.0.9
+  open_appstore: ^1.0.2
 
 dev_dependencies:
   flutter_test:
