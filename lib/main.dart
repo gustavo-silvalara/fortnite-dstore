@@ -166,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
               backgroundColor: Colors.transparent,
               elevation: 0,
               // back up the list of items.
-              floating: true,
+              floating: false,
               // Display a placeholder widget to visualize the shrinking size.
               // Make the initial height of the SliverAppBar larger than normal.
             ),
