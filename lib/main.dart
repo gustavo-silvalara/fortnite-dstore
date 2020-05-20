@@ -69,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
   //   });
   // }
 
-  Future<Widget> getFutureDados() async {
+  Future<void> _getFutureDados() async {
     Locale locale = await DeviceLocale.getCurrentLocale();
 
     Uri url = Uri.parse('https://fortniteapi.io/shop?lang=' +
@@ -107,13 +107,17 @@ class _MyHomePageState extends State<MyHomePage> {
         cachedImage,
       );
     });
+    setState(() {
+      list = listImages;
+    });
+  }
 
-    return GridView.count(
-      crossAxisCount: 2,
-      crossAxisSpacing: 10,
-      mainAxisSpacing: 10,
-      children: listImages,
-    );
+  var list = new List<Widget>();
+
+  @override
+  void initState() {
+    super.initState();
+    _getFutureDados();
   }
 
   @override
@@ -124,25 +128,10 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        elevation: 0.0,
-        centerTitle: true,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Image.asset(
-              'assets/delivery-box.png',
-              fit: BoxFit.contain,
-              height: 32,
-            ),
-            Container(padding: const EdgeInsets.all(8.0), child: Contador())
-          ],
-        ),
-        backgroundColor: Color(0xFF1E8AF4),
-      ),
+      // No appbar provided to the Scaffold, only a body with a
+      // CustomScrollView.
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -156,17 +145,48 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ), // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: FutureBuilder(
-            future: getFutureDados(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return snapshot.data;
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            }),
+        child: CustomScrollView(
+          slivers: <Widget>[
+            // Add the app bar to the CustomScrollView.
+            SliverAppBar(
+              // Provide a standard title.
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    'assets/delivery-box.png',
+                    fit: BoxFit.contain,
+                    height: 32,
+                  ),
+                  Container(
+                      padding: const EdgeInsets.all(8.0), child: Contador())
+                ],
+              ),
+              // Allows the user to reveal the app bar if they begin scrolling
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              // back up the list of items.
+              floating: true,
+              // Display a placeholder widget to visualize the shrinking size.
+              // Make the initial height of the SliverAppBar larger than normal.
+            ),
+            // Next, create a SliverList
+
+            SliverGrid(
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 200.0,
+                mainAxisSpacing: 10.0,
+                crossAxisSpacing: 10.0,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return list[index];
+                },
+                childCount: list.length,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
