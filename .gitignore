@@ -45,3 +45,5 @@ app.*.map.json
 # deploy
 ./android/app/.jks
 ./android/app/build.gradle
+android/key.properties
+android/app/key.jks
