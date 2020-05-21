@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Fortnite Daily Store',
+      title: 'Loja Fortnite',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // This is the theme of your application.
@@ -191,7 +191,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   IconButton(
                     onPressed: _openFortnite,
-                    icon: Icon(Icons.subdirectory_arrow_right),
+                    icon: Icon(Icons.videogame_asset),
                   ),
                 ],
               ),
